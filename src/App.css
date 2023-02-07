@@ -1,0 +1,214 @@
+html,
+body {
+    height: 100%;
+}
+
+.content {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100%;
+    position: relative;
+    transition: margin .3s ease-out 0s;
+}
+
+.content .App,
+.content-of-dialog-box {
+    width: 100%;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    -webkit-flex-basis: auto;
+    flex-basis: auto;
+    padding-top: 56px;
+}
+
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 40vmin;
+    pointer-events: none;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.container .textField {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.card {
+    margin-top: 30px;
+}
+
+.primary-color {
+    color: #ffffff !important;
+    background: #3074f1 !important;
+}
+
+.container button.btn-block {
+    margin-top: 24px;
+    width: 100%;
+}
+
+.margin-bottom-15 {
+    margin-bottom: 15px;
+}
+
+.margin-top-0 {
+    margin-top: 0 !important;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.drawer-menu-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.avatar-drawer-menu-link {
+    padding-top: 15px;
+    padding-left: 5px;
+}
+
+button.btn-block .progress {
+    color: #ffffff;
+    display: none;
+}
+
+#alert-dialog-description {
+    padding: 15px 24px;
+}
+
+.padding-15 {
+    padding: 15px;
+}
+
+.grid-container {
+    padding: 12px;
+}
+
+.min-width-60 {
+    min-width: 60px;
+}
+
+.min-width-130 {
+    min-width: 130px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.header-home-icon {
+    color: #ffffff;
+    padding-top: 5px;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.search-box-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    margin-left: 0;
+    margin-right: 30px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.search-icon {
+    width: 45px;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    pointer-events: none;
+    justify-content: center;
+}
+
+.input-base {
+    color: inherit !important;
+}
+
+.input-base input {
+    width: 100%;
+    padding: 8px 8px 8px 40px;
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.round-send-button {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 50px !important;
+}
+
+.comment-list-item {
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-top: 8px !important;
+}
+
+.tabs-container {
+    margin-bottom: 20px;
+}
+
+.search-auto-complete {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.padding-right-0 {
+    padding-right: 0 !important;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media(min-width:600px) {
+    .content .App,
+    .content-of-dialog-box {
+        padding-top: 65px;
+    }
+}
