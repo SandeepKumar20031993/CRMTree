@@ -72,18 +72,18 @@ const helpers = {
     )
       .then((response) => {
         if (response.data.success === true) {
-          console.log("sandeep", response);
+          // console.log("sandeep", response);
           cookies.set("now_is_admin", response.data.data.is_admin, {
-            path: `${process.env.PUBLIC_URL}/`,
+            path: `/`,
             maxAge: 3600,
           });
           cookies.set("now_is_active", response.data.data.status, {
-            path: `${process.env.PUBLIC_URL}/`,
+            path: `/`,
             maxAge: 3600,
           });
           response.data.data.setype.forEach((setypeitem) => {
             cookies.set(setypeitem, "yes", {
-              path: `${process.env.PUBLIC_URL}/`,
+              path: `/`,
               maxAge: 3600,
             });
           });

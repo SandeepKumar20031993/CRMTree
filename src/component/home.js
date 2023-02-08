@@ -19,7 +19,9 @@ function Home() {
     e.preventDefault();
     console.log("You clicked submit.");
     // navigate("/Leads");
-    navigate("/Leads1");
+    // navigate("/Leads1");
+    navigate("/Leads2");
+    // navigate("/Leads5");
   }
   function goToTicketPage(e) {
     e.preventDefault();

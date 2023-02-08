@@ -53,7 +53,7 @@ function DateWiseDialog(props) {
       </DialogContent>{" "}
       <DialogActions>
         <Button
-          //   onClick={(props) => filterDateWiseLeads(fromDate, toDate)}
+          onClick={() => props.filterDateWiseLeads(fromDate, toDate)}
           color="primary"
         >
           Filter Now{" "}

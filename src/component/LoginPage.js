@@ -65,15 +65,16 @@ export default function Submit() {
         console.warn("result", result);
         if (result.data.success === true) {
           let userdata = result.data.data;
+          console.warn("localStorage.remember", localStorage.remember);
 
-          if (localStorage.remember === 1) {
-            localStorage.setItem("id", userdata[0].id);
-            localStorage.setItem("user_name", userdata[0].user_name);
-            localStorage.setItem("first_name", userdata[0].first_name);
-            localStorage.setItem("last_name", userdata[0].last_name);
-            localStorage.setItem("is_admin", userdata[0].is_admin);
-            localStorage.setItem("status", userdata[0].status);
-          }
+          // if (localStorage.remember === 1) {
+          localStorage.setItem("id", userdata[0].id);
+          localStorage.setItem("user_name", userdata[0].user_name);
+          localStorage.setItem("first_name", userdata[0].first_name);
+          localStorage.setItem("last_name", userdata[0].last_name);
+          localStorage.setItem("is_admin", userdata[0].is_admin);
+          localStorage.setItem("status", userdata[0].status);
+          // }
 
           navigate("/home");
         }

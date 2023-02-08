@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -14,9 +14,33 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 
 function LeadComments() {
-  const [writeComment, setWriteComment] = useState();
-  const allComments = [];
-  const currentLead = currentLead;
+  const [writeComment, setWriteComment] = useState("");
+  const [allComments, setAllcomments] = useState([]);
+  const [currentLead, setCurrentLead] = useState();
+
+  useEffect(() => {
+    axios({
+      method: "post",
+      url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getcomments",
+      data: currentLead,
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          //console.log(response);
+          setCurrentLead({
+            allComments: response.data.data,
+          });
+        } else {
+          //console.log(response.data.msg);
+          setCurrentLead({
+            allComments: "",
+          });
+        }
+      })
+      .catch(function (error) {
+        alert("Something went wrong! Please refresh the page");
+      });
+  });
 
   const handleComment = (e) => {
     e.preventDefault();
@@ -31,10 +55,25 @@ function LeadComments() {
     let user_id = null;
     let user_name = null;
 
+    if (
+      localStorage.getItem("id") != null &&
+      localStorage.getItem("user_name") != null
+    ) {
+      user_id = localStorage.getItem("id");
+      user_name = localStorage.getItem("user_name");
+    } else if (cookies.get("id") && cookies.get("user_name")) {
+      user_id = cookies.get("id");
+      user_name = cookies.get("user_name");
+    }
+
+    console.log("button clicked");
+    console.log(writeComment);
     console.log(user_id);
+    console.log(user_name);
+
     axios({
       method: "post",
-      url: this.postCommentApiUrl,
+      url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=addcomment",
       data: {
         comment: {
           comment: writeComment,
@@ -42,6 +81,21 @@ function LeadComments() {
         id: user_id,
         leadData: currentLead,
       },
+    }).then((response) => {
+      if (response.data.success === true) {
+        console.log(response);
+        setAllcomments({
+          allComments: response.data.data,
+        });
+        setWriteComment({
+          writeComment: "",
+        });
+      } else {
+        console.log(response.data.msg);
+        setAllcomments({
+          allComments: "",
+        });
+      }
     });
   };
 

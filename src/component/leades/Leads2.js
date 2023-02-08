@@ -19,82 +19,27 @@ import Cookies from "universal-cookie";
 
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 // import CloseIcon from '@mui/icons-material/Close';
 
 import DateWiseDialog from "./DateWiseDialog";
 
 import Viewlead from "./Viewlead";
+import Slide from "@mui/material/Slide";
 
-function Leads(props) {
-  // const { filterDateWiseLeads } = props;
-  const [filter, setFilter] = useState("");
-  const [allLeads, setAllLeads] = useState([]);
+function Leads() {
+  const params = useParams();
 
-  const [AllLeadStatus, setAllLeadStatus] = useState("");
-  const [currentLead, setCurrentLead] = useState();
-  const [open, setopen] = useState();
-  const [isDatewiseDialogOpen, setisDatewiseDialogOpen] = useState("");
-  // const currentLeadStatus = "";
-  // const [getFilterLeads, setGetFilterLeads] = useState();
+  const { currentLead } = params;
+  // const { filterDateWiseLeads } = params;
+  const { Viewlead } = params;
+  const { isDatewiseDialogOpen } = params;
+  const [filter, setFilter] = useState("all");
+  const [allleads, setAlllead] = useState([]);
+  const [allLeadStatus, setAllLeadStatus] = useState([]);
+  const [open, setOpen] = useState("false");
 
-  const handleSelectFilter = (e) => {
-    e.preventDefault();
-    const data = e.target.value;
-    console.log(data);
-    setFilter(data);
-  };
-
-  const handleClose = (e) => {
-    e.preventDefault();
-    setopen(false);
-  };
-
-  useEffect(() => {
-    // axios({
-    //   method: "get",
-    //   url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.data.success === true) {
-    //       setAllLead(response.data.data);
-    //     } else {
-    //       alert("Something went wrong! Please refresh the page");
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     alert("Something went wrong! Please refresh the page");
-    //   });
-    getAllLeads();
-  }, []);
-
-  const viewLead = (data) => {
-    console.log("data", data);
-
-    setCurrentLead(data);
-    // axios({
-    //   method: "post",
-    //   url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getleadstatus",
-
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.data.success === true) {
-    //       setAllLeadStatus({ AllLeadStatus: response.data.data });
-    //     } else {
-    //       alert("Something went wrong! Please refresh the page");
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     alert("Something went wrong! Please refresh the page");
-    //   });
-  };
-
-  const getAllLeads = () => {
+  const leads = () => {
     const cookies = new Cookies();
     let user_id = null;
 
@@ -103,8 +48,7 @@ function Leads(props) {
     } else if (cookies.get("id")) {
       user_id = cookies.get("id");
     }
-    let url =
-      "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads";
+    console.log("user_id", user_id);
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads",
@@ -112,19 +56,139 @@ function Leads(props) {
     })
       .then((response) => {
         if (response.data.success === true) {
-          console.log("getAllLeads:", response);
-
-          setAllLeads(response.data.data);
+          setAlllead(response.data.data);
         } else {
-          console.log("getAllLeads:", response);
-          // alert("Something went wrong! Please refresh the page");
+          alert("Something went wrong! Please refresh the page");
+          // console.log(" NO  DATA");
+        }
+      })
+      .catch(function (error) {
+        // console.log(" error:", error);
+        alert("Something went wrong! Please refresh the page");
+      });
+    axios({
+      method: "get",
+      url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getleadstatus",
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          //console.log(response);
+          setAllLeadStatus({
+            AllLeadStatus: response.data.data,
+          });
+        } else {
+          alert("Something went wrong! Please refresh the page");
         }
         //console.log(this.state);
       })
       .catch(function (error) {
-        console.log("Something went wrong! Please refresh the page:", error);
+        alert("Something went wrong! Please refresh the page");
+      });
+  };
 
-        // alert("Something went wrong! Please refresh the page");
+  useEffect(() => {
+    leads();
+    console.log("first");
+  }, []);
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    setOpen(false);
+  };
+
+  const ViewLead = () => {};
+
+  // const ViewLead = (params) => {
+  //   currentLead(params);
+  //   setOpen(false);
+  // };
+
+  //Filter Handler
+  const handleSelectFilter = (event) => {
+    setFilter(event.target.value);
+    const cookies = new Cookies();
+    let user_id = null;
+
+    if (localStorage.getItem("id") != null) {
+      user_id = localStorage.getItem("id");
+    } else if (cookies.get("id")) {
+      user_id = cookies.get("id");
+    }
+
+    //console.log(event.target.value);
+    let postUrl = "";
+    let postData = "";
+    if (event.target.value === "all") {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads";
+      postData = user_id;
+    } else if (event.target.value === "datewise") {
+      console.log("kyahoaa", event.target.value);
+      setAlllead({
+        isDatewiseDialogOpen: true,
+      });
+      return;
+    } else {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getfilteredleads";
+      postData = {
+        id: user_id,
+        date: event.target.value,
+      };
+    }
+
+    getFilterLeads(postUrl, postData);
+  };
+
+  //Date wise filter funtionality
+  const filterDateWiseLeads = (fromDateData, toDateData) => {
+    const cookies = new Cookies();
+    let user_id = null;
+
+    if (localStorage.getItem("id") != null) {
+      user_id = localStorage.getItem("id");
+    } else if (cookies.get("id")) {
+      user_id = cookies.get("id");
+    }
+    //console.log(fromDateData +"--" +toDateData);
+
+    let postUrl =
+      "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getdatewiseleads";
+    let postData = {
+      id: user_id,
+      date: {
+        startdate: fromDateData,
+        enddate: toDateData,
+      },
+    };
+
+    this.getFilterLeads(postUrl, postData);
+
+    setAllLeadStatus({
+      isDatewiseDialogOpen: false,
+    });
+  };
+
+  //For fetching data from API
+  const getFilterLeads = (postUrl, postData) => {
+    axios({
+      method: "post",
+      url: postUrl,
+      data: postData,
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setAlllead({
+            allleads: response.data.data,
+          });
+        } else {
+          setAlllead({
+            allleads: [],
+          });
+        }
+      })
+      .catch(function (error) {
+        alert("Something went wrong! Please refresh the page");
       });
   };
 
@@ -166,17 +230,17 @@ function Leads(props) {
       </Grid>
       <Grid container spacing={1}>
         {" "}
-        {allLeads.map((lead) => (
+        {allleads.map((lead) => (
           <Grid item xs={12} key={lead.leadid}>
             <Card className="">
               <CardActionArea
                 onClick={() => {
-                  viewLead(lead);
+                  ViewLead(lead);
                 }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="strong">
-                    Lead# {lead.lead_no}{" "}
+                    Lead# {lead?.lead_no}{" "}
                   </Typography>{" "}
                   <Typography
                     gutterBottom
@@ -273,14 +337,18 @@ function Leads(props) {
             </Typography>{" "}
           </Toolbar>{" "}
         </AppBar>{" "}
-        {/* <Viewlead currentLead={currentLead} AllLeadStatus={AllLeadStatus} /> */}
+        {/* <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} /> */}
       </Dialog>
-      {/* <DateWiseDialog
+      <DateWiseDialog
         open={isDatewiseDialogOpen}
         filterDateWiseLeads={filterDateWiseLeads}
-      /> */}
+      />
     </Box>
   );
 }
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default Leads;
