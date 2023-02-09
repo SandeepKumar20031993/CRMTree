@@ -13,11 +13,24 @@ import axios from "axios";
 // import Axios from "axios";
 // import Cookies from "universal-cookie";
 
-function LeadComments() {
+function LeadComments(params) {
   const [writeComment, setWriteComment] = useState("");
   const [allComments, setAllcomments] = useState([]);
-  const [currentLead, setCurrentLead] = useState();
+  const [currentLead, setCurrentLead] = useState("");
+  console.log(params);
 
+  // useEffect(() => {
+  //   fetch(
+  //     "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getcomments"
+  //   ).then((responce) => {
+  //     // console.log(responce);
+  //     responce.json().then((result) => {
+  //       setAllcomments(result);
+
+  //     });
+  //   });
+  // });
+  console.log(currentLead);
   useEffect(() => {
     axios({
       method: "post",
@@ -27,14 +40,10 @@ function LeadComments() {
       .then((response) => {
         if (response.data.success === true) {
           //console.log(response);
-          setCurrentLead({
-            allComments: response.data.data,
-          });
+          setAllcomments(response.data.data);
         } else {
           //console.log(response.data.msg);
-          setCurrentLead({
-            allComments: "",
-          });
+          setAllcomments(allComments);
         }
       })
       .catch(function (error) {
@@ -44,9 +53,7 @@ function LeadComments() {
 
   const handleComment = (e) => {
     e.preventDefault();
-    setWriteComment({
-      writeComment: e.target.value,
-    });
+    setWriteComment(e.target.value);
   };
 
   const postComment = (e) => {

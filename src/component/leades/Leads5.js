@@ -239,7 +239,7 @@ function Leads() {
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="strong">
-                    Lead# {lead?.lead_no}{" "}
+                    Lead# {lead.lead_no}{" "}
                   </Typography>{" "}
                   <Typography
                     gutterBottom
@@ -336,7 +336,7 @@ function Leads() {
             </Typography>{" "}
           </Toolbar>{" "}
         </AppBar>{" "}
-        <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} />
+        {/* <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} /> */}
       </Dialog>
       <DateWiseDialog
         open={isDatewiseDialogOpen}

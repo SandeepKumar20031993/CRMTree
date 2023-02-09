@@ -24,20 +24,20 @@ import { useParams } from "react-router-dom";
 
 import DateWiseDialog from "./DateWiseDialog";
 
-import Viewlead from "./Viewlead";
+// import Viewlead from "./Viewlead";
 import Slide from "@mui/material/Slide";
+import Viewlead from "./Viewlead";
 
 function Leads() {
   const params = useParams();
 
-  const { currentLead } = params;
-  // const { filterDateWiseLeads } = params;
-  const { Viewlead } = params;
   const { isDatewiseDialogOpen } = params;
-  const [filter, setFilter] = useState("all");
+
+  const [filter, setFilter] = useState("");
   const [allleads, setAlllead] = useState([]);
   const [allLeadStatus, setAllLeadStatus] = useState([]);
-  const [open, setOpen] = useState("false");
+  const [open, setOpen] = useState(false);
+  const [currentLead, setCurrentLead] = useState();
 
   const leads = () => {
     const cookies = new Cookies();
@@ -96,12 +96,11 @@ function Leads() {
     setOpen(false);
   };
 
-  const ViewLead = () => {};
-
-  // const ViewLead = (params) => {
-  //   currentLead(params);
-  //   setOpen(false);
-  // };
+  const welead = (params) => {
+    setCurrentLead(params);
+    console.log(params, "asd");
+    setOpen(true);
+  };
 
   //Filter Handler
   const handleSelectFilter = (event) => {
@@ -123,7 +122,7 @@ function Leads() {
         "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads";
       postData = user_id;
     } else if (event.target.value === "datewise") {
-      console.log("kyahoaa", event.target.value);
+      console.log("kyahoaa", params);
       setAlllead({
         isDatewiseDialogOpen: true,
       });
@@ -168,7 +167,7 @@ function Leads() {
       isDatewiseDialogOpen: false,
     });
   };
-
+  // console.log(currentLead, "456454");
   //For fetching data from API
   const getFilterLeads = (postUrl, postData) => {
     axios({
@@ -235,7 +234,7 @@ function Leads() {
             <Card className="">
               <CardActionArea
                 onClick={() => {
-                  ViewLead(lead);
+                  welead(lead);
                 }}
               >
                 <CardContent>
@@ -256,7 +255,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.firstname} {lead.lastname}{" "}
+                      {lead?.firstname} {lead?.lastname}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -273,7 +272,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.phone}{" "}
+                      {lead?.phone}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -290,7 +289,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.company}{" "}
+                      {lead?.company}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -306,7 +305,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.first_name} {lead.last_name}{" "}
+                      {lead?.first_name} {lead?.last_name}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                 </CardContent>{" "}
@@ -337,7 +336,7 @@ function Leads() {
             </Typography>{" "}
           </Toolbar>{" "}
         </AppBar>{" "}
-        {/* <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} /> */}
+        <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} />
       </Dialog>
       <DateWiseDialog
         open={isDatewiseDialogOpen}
