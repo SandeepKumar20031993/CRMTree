@@ -9,14 +9,16 @@ import Ribbon from "./component/Ribbon/Ribbon";
 import Header from "./component/Theme/Header";
 import Labels from "./component/Labels/Labels";
 import Warranty from "./component/Warranty/Warranty";
-// import Tickets from "./component/Tickets/Tickets";
+import Tickets from "./component/Tickets/Tickets";
 // import Leads from "./component/leades/Leads";
 // import Leads1 from "./component/leades/Leads1";
-import Viewlead from "./component/leades/Viewlead";
-import Leads2 from "./component/leades/Leads2";
-import DateWiseDialog from "./component/leades/DateWiseDialog";
-import LeadComments from "./component/leades/LeadComments";
+// import Viewlead from "./component/leades/Viewlead";
+// import Leads2 from "./component/leades/Leads2";
+// import DateWiseDialog from "./component/leades/DateWiseDialog";
+// import LeadComments from "./component/leades/LeadComments";
 // import Leads5 from "./component/leades/Leads5";
+import Leads3 from "./component/leades/Leads3";
+import Viewlead1 from "./component/leades/Viewlead1";
 
 function App() {
   return (
@@ -25,14 +27,15 @@ function App() {
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/viewlead" element={<Viewlead />} />
+        <Route path="/viewlead1" element={<Viewlead1 />} />
         {/* <Route path="/src/component/Ribbon/Ribbon" element={<Ribbon />} /> */}
         <Route path="/ribbon" element={<Ribbon />} />
         <Route path="/labels" element={<Labels />} />
         <Route path="/warranty" element={<Warranty />} />
-        {/* <Route path="/Tickets" element={<Tickets />} /> */}
+        <Route path="/Tickets" element={<Tickets />} />
         {/* <Route path="/Leads" element={<Leads />} /> */}
-        <Route path="/Leads2" element={<Leads2 />}>
+        {/* <Route path="/Leads2" element={<Leads2 />}> */}
+        <Route path="/Leads3" element={<Leads3 />}>
           {/* <Route path="/DateWiseDialog" element={<DateWiseDialog />} />
           <Route path="/LeadComments" element={<LeadComments />} /> */}
         </Route>

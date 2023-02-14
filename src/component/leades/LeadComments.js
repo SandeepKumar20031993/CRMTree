@@ -14,23 +14,10 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 
 function LeadComments(params) {
-  const [writeComment, setWriteComment] = useState("");
-  const [allComments, setAllcomments] = useState([]);
-  const [currentLead, setCurrentLead] = useState("");
-  console.log(params);
+  const [writeComment, setWriteComment] = useState(params?.writeComment);
+  const [allComments, setAllcomments] = useState(params?.allComments);
+  const [currentLead, setCurrentLead] = useState(params?.currentLead);
 
-  // useEffect(() => {
-  //   fetch(
-  //     "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getcomments"
-  //   ).then((responce) => {
-  //     // console.log(responce);
-  //     responce.json().then((result) => {
-  //       setAllcomments(result);
-
-  //     });
-  //   });
-  // });
-  console.log(currentLead);
   useEffect(() => {
     axios({
       method: "post",
@@ -43,7 +30,7 @@ function LeadComments(params) {
           setAllcomments(response.data.data);
         } else {
           //console.log(response.data.msg);
-          setAllcomments(allComments);
+          setAllcomments("");
         }
       })
       .catch(function (error) {
@@ -88,22 +75,21 @@ function LeadComments(params) {
         id: user_id,
         leadData: currentLead,
       },
-    }).then((response) => {
-      if (response.data.success === true) {
-        console.log(response);
-        setAllcomments({
-          allComments: response.data.data,
-        });
-        setWriteComment({
-          writeComment: "",
-        });
-      } else {
-        console.log(response.data.msg);
-        setAllcomments({
-          allComments: "",
-        });
-      }
-    });
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setAllcomments(response.data.data);
+          setWriteComment("");
+        } else {
+          console.log(response.data.msg);
+          setAllcomments({
+            allComments: "",
+          });
+        }
+      })
+      .catch(function (error) {
+        alert("Something went wrong! Please refresh the page");
+      });
   };
 
   return (
@@ -188,7 +174,7 @@ function LeadComments(params) {
                         justify="flex-start"
                         alignItems="center"
                       >
-                        & nbsp;{" "}
+                        &nbsp;{" "}
                         <Typography variant="body1" component="span">
                           {" "}
                           {leadComment.commentcontent}{" "}

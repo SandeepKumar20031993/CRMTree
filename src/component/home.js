@@ -20,7 +20,8 @@ function Home() {
     console.log("You clicked submit.");
     // navigate("/Leads");
     // navigate("/Leads1");
-    navigate("/Leads2");
+    // navigate("/Leads2");
+    navigate("/Leads3");
     // navigate("/Leads5");
   }
   function goToTicketPage(e) {

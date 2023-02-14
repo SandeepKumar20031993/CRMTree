@@ -19,25 +19,24 @@ import Cookies from "universal-cookie";
 
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 // import CloseIcon from '@mui/icons-material/Close';
 
 import DateWiseDialog from "./DateWiseDialog";
 
-import Viewlead from "./Viewlead";
+// import Viewlead from "./Viewlead";
 import Slide from "@mui/material/Slide";
+import Viewlead from "./Viewlead1";
 
 function Leads() {
-  const params = useParams();
+  //   const { isDatewiseDialogOpen } = params;
 
-  const { currentLead } = params;
-  // const { filterDateWiseLeads } = params;
-  const { Viewlead } = params;
-  const { isDatewiseDialogOpen } = params;
   const [filter, setFilter] = useState("all");
   const [allleads, setAlllead] = useState([]);
   const [allLeadStatus, setAllLeadStatus] = useState([]);
-  const [open, setOpen] = useState("false");
+  const [open, setOpen] = useState(false);
+  const [currentLead, setCurrentLead] = useState();
+  const [isDatewiseDialogOpen, setIsDatewiseDialogOpen] = useState(false);
 
   const leads = () => {
     const cookies = new Cookies();
@@ -48,7 +47,7 @@ function Leads() {
     } else if (cookies.get("id")) {
       user_id = cookies.get("id");
     }
-    console.log("user_id", user_id);
+
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads",
@@ -56,6 +55,7 @@ function Leads() {
     })
       .then((response) => {
         if (response.data.success === true) {
+          // console.log("kuch aaya", response);
           setAlllead(response.data.data);
         } else {
           alert("Something went wrong! Please refresh the page");
@@ -73,9 +73,7 @@ function Leads() {
       .then((response) => {
         if (response.data.success === true) {
           //console.log(response);
-          setAllLeadStatus({
-            AllLeadStatus: response.data.data,
-          });
+          setAllLeadStatus(response.data.data);
         } else {
           alert("Something went wrong! Please refresh the page");
         }
@@ -88,19 +86,19 @@ function Leads() {
 
   useEffect(() => {
     leads();
-    console.log("first");
   }, []);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.preventDefault();
     setOpen(false);
   };
 
-  const ViewLead = () => {};
+  const welead = (lead) => {
+    // alert("Tera kya hoga kaliya ");
 
-  // const ViewLead = (params) => {
-  //   currentLead(params);
-  //   setOpen(false);
-  // };
+    setCurrentLead(lead);
+    setOpen(true);
+  };
 
   //Filter Handler
   const handleSelectFilter = (event) => {
@@ -122,10 +120,7 @@ function Leads() {
         "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads";
       postData = user_id;
     } else if (event.target.value === "datewise") {
-      console.log("kyahoaa", event.target.value);
-      setAlllead({
-        isDatewiseDialogOpen: true,
-      });
+      setIsDatewiseDialogOpen(true);
       return;
     } else {
       postUrl =
@@ -161,14 +156,11 @@ function Leads() {
       },
     };
 
-    this.getFilterLeads(postUrl, postData);
+    getFilterLeads(postUrl, postData);
 
-    setAllLeadStatus({
-      isDatewiseDialogOpen: false,
-    });
+    setIsDatewiseDialogOpen(false);
   };
 
-  //For fetching data from API
   const getFilterLeads = (postUrl, postData) => {
     axios({
       method: "post",
@@ -178,11 +170,11 @@ function Leads() {
       .then((response) => {
         if (response.data.success === true) {
           setAlllead({
-            allleads: response.data.data,
+            AllLeads: response.data.data,
           });
         } else {
           setAlllead({
-            allleads: [],
+            AllLeads: [],
           });
         }
       })
@@ -234,12 +226,12 @@ function Leads() {
             <Card className="">
               <CardActionArea
                 onClick={() => {
-                  ViewLead(lead);
+                  welead(lead);
                 }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="strong">
-                    Lead# {lead.lead_no}{" "}
+                    Lead# {lead?.lead_no}{" "}
                   </Typography>{" "}
                   <Typography
                     gutterBottom
@@ -255,7 +247,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.firstname} {lead.lastname}{" "}
+                      {lead?.firstname} {lead?.lastname}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -272,7 +264,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.phone}{" "}
+                      {lead?.phone}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -289,7 +281,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.company}{" "}
+                      {lead?.company}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                   <Typography
@@ -305,7 +297,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead.first_name} {lead.last_name}{" "}
+                      {lead?.first_name} {lead.last_name}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                 </CardContent>{" "}
@@ -336,7 +328,8 @@ function Leads() {
             </Typography>{" "}
           </Toolbar>{" "}
         </AppBar>{" "}
-        {/* <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} /> */}
+        <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} />
+        {/*  */}
       </Dialog>
       <DateWiseDialog
         open={isDatewiseDialogOpen}

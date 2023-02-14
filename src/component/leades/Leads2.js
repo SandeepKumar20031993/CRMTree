@@ -19,25 +19,24 @@ import Cookies from "universal-cookie";
 
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 // import CloseIcon from '@mui/icons-material/Close';
 
 import DateWiseDialog from "./DateWiseDialog";
 
 // import Viewlead from "./Viewlead";
 import Slide from "@mui/material/Slide";
-import Viewlead from "./Viewlead";
+import Viewlead from "./Viewlead1";
 
 function Leads() {
-  const params = useParams();
+  //   const { isDatewiseDialogOpen } = params;
 
-  const { isDatewiseDialogOpen } = params;
-
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("all");
   const [allleads, setAlllead] = useState([]);
   const [allLeadStatus, setAllLeadStatus] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentLead, setCurrentLead] = useState();
+  const [isDatewiseDialogOpen, setIsDatewiseDialogOpen] = useState(false);
 
   const leads = () => {
     const cookies = new Cookies();
@@ -56,6 +55,7 @@ function Leads() {
     })
       .then((response) => {
         if (response.data.success === true) {
+          // console.log("kuch aaya", response);
           setAlllead(response.data.data);
         } else {
           alert("Something went wrong! Please refresh the page");
@@ -73,9 +73,7 @@ function Leads() {
       .then((response) => {
         if (response.data.success === true) {
           //console.log(response);
-          setAllLeadStatus({
-            AllLeadStatus: response.data.data,
-          });
+          setAllLeadStatus(response.data.data);
         } else {
           alert("Something went wrong! Please refresh the page");
         }
@@ -96,9 +94,13 @@ function Leads() {
     setOpen(false);
   };
 
-  const welead = (params) => {
-    setCurrentLead(params);
-    console.log(params, "asd");
+  const welead = (lead) => {
+    // alert("Tera kya hoga kaliya ");
+
+    setCurrentLead(lead);
+    console.log("hkjdjkdhkjshdjkhsjkdhkjshdkjhsk", lead);
+    console.log("hkjdjkdhkjshdjkhsjkdhkjshdkjhsk", currentLead);
+
     setOpen(true);
   };
 
@@ -122,10 +124,7 @@ function Leads() {
         "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads";
       postData = user_id;
     } else if (event.target.value === "datewise") {
-      console.log("kyahoaa", params);
-      setAlllead({
-        isDatewiseDialogOpen: true,
-      });
+      setIsDatewiseDialogOpen(true);
       return;
     } else {
       postUrl =
@@ -161,14 +160,11 @@ function Leads() {
       },
     };
 
-    this.getFilterLeads(postUrl, postData);
+    getFilterLeads(postUrl, postData);
 
-    setAllLeadStatus({
-      isDatewiseDialogOpen: false,
-    });
+    setIsDatewiseDialogOpen(false);
   };
-  // console.log(currentLead, "456454");
-  //For fetching data from API
+
   const getFilterLeads = (postUrl, postData) => {
     axios({
       method: "post",
@@ -178,11 +174,11 @@ function Leads() {
       .then((response) => {
         if (response.data.success === true) {
           setAlllead({
-            allleads: response.data.data,
+            AllLeads: response.data.data,
           });
         } else {
           setAlllead({
-            allleads: [],
+            AllLeads: [],
           });
         }
       })
@@ -305,7 +301,7 @@ function Leads() {
                       color="textPrimary"
                     >
                       {" "}
-                      {lead?.first_name} {lead?.last_name}{" "}
+                      {lead?.first_name} {lead.last_name}{" "}
                     </Typography>{" "}
                   </Typography>{" "}
                 </CardContent>{" "}
@@ -337,6 +333,7 @@ function Leads() {
           </Toolbar>{" "}
         </AppBar>{" "}
         <Viewlead currentLead={currentLead} allLeadStatus={allLeadStatus} />
+        {/*  */}
       </Dialog>
       <DateWiseDialog
         open={isDatewiseDialogOpen}

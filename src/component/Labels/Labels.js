@@ -215,7 +215,7 @@ function Labels() {
               </Typography>
               <Typography variant="h3" component="h3" align="center">
                 <Typography variant="inherit" component="strong">
-                  {perlabelPrice}
+                  &#x20b9; {perlabelPrice}
                   /-{" "}
                 </Typography>
               </Typography>

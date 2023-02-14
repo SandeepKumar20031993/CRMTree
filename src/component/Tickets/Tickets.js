@@ -1,361 +1,475 @@
-// import { React, useEffect, useState } from "react";
-// // import {
-// //   Box,
-// //   Grid,
-// //   Card,
-// //   CardContent,
-// //   FormControl,
-// //   InputLabel,
-// //   Select,
-// //   MenuItem,
-// //   CardActionArea,
-// //   Typography,
-// //   Divider,
-// //   Dialog,
-// //   AppBar,
-// //   Toolbar,
-// // } from "@mui/system";
-// import Box from "@mui/material/Box";
-// import Grid from "@mui/material/Grid";
-// import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
-// import FormControl from "@mui/material/FormControl";
-// import InputLabel from "@mui/material/InputLabel";
-// import Select from "@mui/material/Select";
-// import MenuItem from "@mui/material/MenuItem";
-// import CardActionArea from "@mui/material/CardActionArea";
-// import Typography from "@mui/material/Typography";
-// import Dialog from "@mui/material/Dialog";
-// import AppBar from "@mui/material/AppBar";
-// import Toolbar from "@mui/material/Toolbar";
-// import IconButton from "@mui/material/IconButton";
+import React, { useEffect, useState } from "react";
 
-// import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import CardActionArea from "@mui/material/CardActionArea";
+import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Cookies from "universal-cookie";
+import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
-// import ViewTicket from "./ViewTicket";
+import { Divider } from "@mui/material";
+import Slide from "@mui/material/Slide";
+import ViewTicket from "./ViewTicket";
 
-// import Cookies from "universal-cookie";
+// import SolutionDialog from "./SolutionDialog";
+// import TicketCommets from "./TicketCommets";
+// import TicketSolution from "./TicketSolution";
 
-// import axios from "axios";
-// import { useParams } from "react-router-dom";
+function Ticket(params) {
+  const [allticket, setAllticket] = useState([]);
+  const [allTicketStatus, setAllticketStatus] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [currentTicket, setCurrentTicket] = useState([]);
+  // const [currentLeadStatus, setCurrentLeadStatus] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [filterbyassignee, setFilterbyAssignee] = useState("all");
+  const [isDatewiseDialogOpen, setisDatewiseDialogOpen] = useState(false);
+  const [allAssignee, setAllAssignee] = useState([]);
 
-// function Tickets() {
-//   // const [AllTicket, setAllTicket] = useState([]);
-//   // const [AllTicketStatus, setAllTicketStatus] = useState([]);
-//   const [open, setOpen] = useState("");
-//   const [currentTicket, setcurrentTicket] = useState([]);
-//   // const [currentLeadStatus, setcurrentLeadStatus] = useState("");
-//   const [filterbyassignee, setfilterbyassignee] = useState("all");
-//   const [filter, setFilter] = useState("all");
-//   const [tickets, setTicket] = useState();
-//   const[allticketstatus,setAllticketStatus]= useState("")
-//   // const [isDatewiseDialogOpen, setisDatewiseDialogOpen] = useState("false");
-//   // const [allAssignee, setallAssignee] = useState([]);
+  // const viticket = (params) => {
+  //   setCurrentTicket({
+  //     currentTicket: params,
+  //     open: true,
+  //   });
+  // };
 
-//   const tickete = () => {
-//     const cookies = new Cookies();
-//     let user_id = null;
+  const testing = () => {
+    const cookies = new Cookies();
+    let user_id = null;
 
-//     if (localStorage.getItem("id") != null) {
-//       user_id = localStorage.getItem("id");
-//     } else if (cookies.get("id")) {
-//       user_id = cookies.get("id");
-//     }
-//     console.log("user id", user_id);
-//     axios({
-//       method: "post",
-//       url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketList",
-//       data: user_id,
-//     })
-//       .then((response) => {
-//         if (response.data.success === true) {
-//           setTicket(response.data.data);
-//         } else {
-//           alert("Something went wrong! Please refresh the page");
-//           // console.log(" NO  DATA");
-//         }
-//       })
-//       .catch(function (error) {
-//         // console.log(" error:", error);
-//         alert("Something went wrong! Please refresh the page");
-//       });
-//       axios({
-//         method: "get",
-//         url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketStatus",
-//       })
-//         .then((response) => {
-//           if (response.data.success === true) {
-//             //console.log(response);
-//             setAllticketStatus({
-//                 allticketstatus: response.data.data,
-//             });
-//           } else {
-//             alert("Something went wrong! Please refresh the page");
-//           }
-//           //console.log(this.state);
-//         })
-//         .catch(function (error) {
-//           alert("Something went wrong! Please refresh the page");
-//         });
-//     };
-//   };
+    if (localStorage.getItem("id") != null) {
+      user_id = localStorage.getItem("id");
+    } else if (cookies.get("id")) {
+      user_id = cookies.get("id");
+    }
 
-//   useEffect(() => {
-//     tickete();
-//   });
+    axios({
+      method: "post",
+      url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketList",
+      data: {
+        user_id: user_id,
+      },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          //console.log(response);
+          setAllticket(response.data.data);
+        } else {
+          alert("Something went wrong! Please refresh the pageas");
+        }
+        //console.log(this.state);
+      })
+      .catch(function (error) {
+        alert("Something went wrong! Please refresh the pagejyt");
+      });
+    axios({
+      method: "GET",
+      url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketStatus",
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          //console.log(response);
+          setAllticketStatus(response.data.data);
+        } else {
+          console.log("Something went wrong! Please refresh the pagevgy");
+        }
+        //console.log(this.state);
+      })
+      .catch(function (error) {
+        console.log("Something went wrong! Please refresh the pagerdx");
+      });
 
-//   const handleStatusFilter = (e) => {
-//     setFilter({
-//       filter: e.target.value,
-//       filterbyassignee: "all",
-//     });
-//   };
+    axios({
+      method: "GET",
+      url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getallassignee",
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          //console.log(response);
+          setAllAssignee(response.data.data);
+        } else {
+          console.log("Something went wrong! Please refresh the pagedfdf");
+        }
+        //console.log(this.state);
+      })
+      .catch(function (error) {
+        console.log("Something went wrong! Please refresh the pagekjhgf");
+      });
+  };
 
-//   const handleAssigneeFilter = (e) => {
-//     console.log(e);
-//     setfilterbyassignee({
-//       filterbyassignee: e.target.value,
-//       filter: "all",
-//     });
-//   };
+  useEffect(() => {
+    testing();
+    // filterDateWiseLeads();
+    // viticket();
+  }, []);
 
-//   const handleClose = () => {
-//     setOpen({
-//       currentTicket: "",
-//       open: true,
-//     });
-//   };
+  const handleClose = () => {
+    setOpen(true);
+  };
 
-//   return (
-//     <Box width="100%" className="grid-container">
-//       {" "}
-//       {/*** Select Ticket Filter***/}
-//       <Grid container spacing={1}>
-//         <Grid item xs={6}>
-//           <Card className="width-100">
-//             <CardContent>
-//               <FormControl className="width-100">
-//                 <InputLabel htmlFor="filter-tickets">
-//                   {" "}
-//                   Filter by status:{" "}
-//                 </InputLabel>{" "}
-//                 <Select
-//                   value={filter}
-//                   onChange={handleStatusFilter}
-//                   inputProps={{
-//                     name: "filter",
-//                     id: "filter-tickets",
-//                   }}
-//                 >
-//                   <MenuItem value="all"> Recent 100 </MenuItem>{" "}
-//                   {AllTicketStatus.map((ticketData) => (
-//                     <MenuItem
-//                       key={ticketData.ticketstatus_id}
-//                       value={ticketData.ticketstatus}
-//                     >
-//                       {" "}
-//                       {ticketData.ticketstatus}{" "}
-//                     </MenuItem>
-//                   ))}{" "}
-//                 </Select>{" "}
-//               </FormControl>{" "}
-//             </CardContent>{" "}
-//           </Card>{" "}
-//         </Grid>{" "}
-//         <Grid item xs={6}>
-//           <Card className="width-100">
-//             <CardContent>
-//               <FormControl className="width-100">
-//                 <InputLabel htmlFor="filter-assignee-tickets">
-//                   {" "}
-//                   Filter by assignee:{" "}
-//                 </InputLabel>{" "}
-//                 <Select
-//                   value={filterbyassignee}
-//                   onChange={handleAssigneeFilter}
-//                   inputProps={{
-//                     name: "filter-assignee",
-//                     id: "filter-assignee-tickets",
-//                   }}
-//                 >
-//                   <MenuItem value="all"> All User </MenuItem>{" "}
-//                   {this.state.allAssignee.map((assignee) => (
-//                     <MenuItem key={assignee.id} value={assignee.id}>
-//                       {" "}
-//                       {assignee.first_name} {assignee.last_name}{" "}
-//                     </MenuItem>
-//                   ))}{" "}
-//                 </Select>{" "}
-//               </FormControl>{" "}
-//             </CardContent>{" "}
-//           </Card>{" "}
-//         </Grid>{" "}
-//         <Grid item xs={12}>
-//           {" "}
-//         </Grid>{" "}
-//       </Grid>
-//       <Grid container spacing={1}>
-//         {" "}
-//         {this.state.AllTicket.map((ticket) => (
-//           <Grid item xs={12} key={ticket.ticketid}>
-//             <Card className="">
-//               <CardActionArea
-//                 onClick={() => {
-//                   ViewTicket(ticket);
-//                 }}
-//               >
-//                 <CardContent>
-//                   <Typography gutterBottom variant="h6" component="strong">
-//                     {" "}
-//                     {ticket.accountname}{" "}
-//                   </Typography>{" "}
-//                   {ticket.accountname ? <Divider /> : <span> </span>}{" "}
-//                   <Typography
-//                     gutterBottom
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Ticket#{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="subtitle1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.ticket_no}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                   <Typography
-//                     gutterBottom
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Contact Name:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.firstname} {ticket.lastname}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                   <Typography
-//                     gutterBottom
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Contact Number:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.mobile ? ticket.mobile : ticket.phone}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                   <Typography
-//                     gutterBottom
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Status:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.status}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                   <Typography
-//                     gutterBottom
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Priority:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.priority}{" "}
-//                     </Typography>{" "}
-//                     & nbsp; & nbsp; Severity:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.severity}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                   <Typography
-//                     variant="body2"
-//                     color="textSecondary"
-//                     component="p"
-//                   >
-//                     Assigned to:{" "}
-//                     <Typography
-//                       gutterBottom
-//                       variant="body1"
-//                       component="strong"
-//                       color="textPrimary"
-//                     >
-//                       {" "}
-//                       {ticket.first_name} {ticket.last_name}{" "}
-//                     </Typography>{" "}
-//                   </Typography>{" "}
-//                 </CardContent>{" "}
-//               </CardActionArea>{" "}
-//             </Card>{" "}
-//           </Grid>
-//         ))}{" "}
-//       </Grid>
-//       <Dialog
-//         fullScreen
-//         open={open}
-//         onClose={handleClose}
-//         // TransitionComponent={Transition}
-//       >
-//         <AppBar className="">
-//           <Toolbar>
-//             <IconButton
-//               edge="start"
-//               color="inherit"
-//               onClick={handleClose}
-//               aria-label="Close"
-//             >
-//               <CloseIcon />
-//             </IconButton>{" "}
-//             <Typography variant="h6" className="">
-//               {" "}
-//               {currentTicket.ticket_no}{" "}
-//             </Typography>{" "}
-//           </Toolbar>{" "}
-//         </AppBar>{" "}
-//         <ViewTicket
-//           currentTicket={currentTicket}
-//           allTicketStatus={AllTicketStatus}
-//         />{" "}
-//       </Dialog>
-//     </Box>
-//   );
-// }
+  //Filter Handler
+  const handleStatusFilter = (event) => {
+    setFilter(event.target.value);
+    setFilterbyAssignee("all");
 
-// export default Tickets;
+    const cookies = new Cookies();
+    let user_id = null;
+
+    if (localStorage.getItem("id") != null) {
+      user_id = localStorage.getItem("id");
+    } else if (cookies.get("id")) {
+      user_id = cookies.get("id");
+    }
+
+    let postUrl = "";
+    let postData = "";
+    if (event.target.value === "all") {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketList";
+      postData = user_id;
+    } else {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getFilteredTicketByStatus";
+      postData = {
+        id: user_id,
+        status: event.target.value,
+      };
+    }
+
+    getFilterTickets(postUrl, postData);
+  };
+
+  //Filter Handler
+  const handleAssigneeFilter = (event) => {
+    setFilterbyAssignee(event.target.value);
+    // setOpen("all");
+    const cookies = new Cookies();
+    let user_id = null;
+
+    if (localStorage.getItem("id") != null) {
+      user_id = localStorage.getItem("id");
+    } else if (cookies.get("id")) {
+      user_id = cookies.get("id");
+    }
+
+    //console.log(event.target.value);
+    let postUrl = "";
+    let postData = "";
+    if (event.target.value === "all") {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getTicketList";
+      postData = user_id;
+    } else {
+      postUrl =
+        "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getFilteredTicketByAssignee";
+      postData = {
+        id: user_id,
+        otheruserid: event.target.value,
+      };
+    }
+
+    getFilterTickets(postUrl, postData);
+  };
+
+  const vticket = (params) => {
+    setCurrentTicket(params);
+    setOpen(true);
+  };
+
+  // Date wise filter funtionality
+
+  // const filterDateWiseLeads = (fromDateData, toDateData) => {
+  //   const cookies = new Cookies();
+  //   let user_id = null;
+
+  //   if (localStorage.getItem("id") != null) {
+  //     user_id = localStorage.getItem("id");
+  //   } else if (cookies.get("id")) {
+  //     user_id = cookies.get("id");
+  //   }
+  //   //console.log(fromDateData +"--" +toDateData);
+
+  //   let postUrl =
+  //     process.env.REACT_APP_API_URL + "leadsData.php?action=getdatewiseleads";
+  //   let postData = {
+  //     id: user_id,
+  //     date: {
+  //       startdate: fromDateData,
+  //       enddate: toDateData,
+  //     },
+  //   };
+
+  //   this.getFilterLeads(postUrl, postData);
+
+  //   setisDatewiseDialogOpen({
+  //     isDatewiseDialogOpen: false,
+  //   });
+  // };
+
+  //For fetching data from API
+  const getFilterTickets = (postUrl, postData) => {
+    axios({
+      method: "post",
+      url: postUrl,
+      data: postData,
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setAllticket(response.data.data);
+        } else {
+          setAllticket([]);
+        }
+      })
+      .catch(function (error) {
+        alert("Something went wrong! Please refresh the page");
+      });
+  };
+
+  return (
+    <Box width="100%" className="grid-container">
+      {" "}
+      {/*** Select Ticket Filter***/}{" "}
+      <Grid container spacing={1}>
+        <Grid item xs={6}>
+          <Card className="width-100">
+            <CardContent>
+              <FormControl className="width-100">
+                <InputLabel htmlFor="filter-tickets">
+                  {" "}
+                  Filter by status:{" "}
+                </InputLabel>{" "}
+                <Select
+                  value={filter}
+                  onChange={handleStatusFilter}
+                  inputProps={{
+                    name: "filter",
+                    id: "filter-tickets",
+                  }}
+                >
+                  <MenuItem value="all"> Recent 100 </MenuItem>{" "}
+                  {allTicketStatus.map((ticketData) => (
+                    <MenuItem
+                      key={ticketData.ticketstatus_id}
+                      value={ticketData.ticketstatus}
+                    >
+                      {" "}
+                      {ticketData.ticketstatus}{" "}
+                    </MenuItem>
+                  ))}{" "}
+                </Select>{" "}
+              </FormControl>{" "}
+            </CardContent>{" "}
+          </Card>{" "}
+        </Grid>{" "}
+        <Grid item xs={6}>
+          <Card className="width-100">
+            <CardContent>
+              <FormControl className="width-100">
+                <InputLabel htmlFor="filter-assignee-tickets">
+                  {" "}
+                  Filter by assignee:{" "}
+                </InputLabel>{" "}
+                <Select
+                  value={filterbyassignee}
+                  onChange={handleAssigneeFilter}
+                  inputProps={{
+                    name: "filter-assignee",
+                    id: "filter-assignee-tickets",
+                  }}
+                >
+                  <MenuItem value="all"> All User </MenuItem>{" "}
+                  {allAssignee?.map((assignee) => (
+                    <MenuItem key={assignee.id} value={assignee.id}>
+                      {" "}
+                      {assignee.first_name} {assignee.last_name}{" "}
+                    </MenuItem>
+                  ))}{" "}
+                </Select>{" "}
+              </FormControl>{" "}
+            </CardContent>{" "}
+          </Card>{" "}
+        </Grid>{" "}
+        <Grid item xs={12}>
+          {" "}
+        </Grid>{" "}
+      </Grid>
+      <Grid container spacing={1}>
+        {" "}
+        {allticket.map((ticket) => (
+          <Grid item xs={12} key={ticket.ticketid}>
+            <Card className="">
+              <CardActionArea
+                onClick={() => {
+                  vticket(ticket);
+                }}
+              >
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="strong">
+                    {" "}
+                    {ticket.accountname}{" "}
+                  </Typography>{" "}
+                  {ticket.accountname ? <Divider /> : <span> </span>}{" "}
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Ticket#{" "}
+                    <Typography
+                      gutterBottom
+                      variant="subtitle1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.ticket_no}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Contact Name:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.firstname} {ticket?.lastname}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Contact Number:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.mobile ? ticket.mobile : ticket.phone}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Status:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.status}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                  <Typography
+                    gutterBottom
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Priority:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.priority}{" "}
+                    </Typography>{" "}
+                    &nbsp; &nbsp; Severity:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.severity}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Assigned to:{" "}
+                    <Typography
+                      gutterBottom
+                      variant="body1"
+                      component="strong"
+                      color="textPrimary"
+                    >
+                      {" "}
+                      {ticket.first_name} {ticket.last_name}{" "}
+                    </Typography>{" "}
+                  </Typography>{" "}
+                </CardContent>{" "}
+              </CardActionArea>{" "}
+            </Card>{" "}
+          </Grid>
+        ))}{" "}
+      </Grid>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar className="">
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </IconButton>{" "}
+            <Typography variant="h6" className="">
+              {" "}
+              {currentTicket.ticket_no}{" "}
+            </Typography>{" "}
+          </Toolbar>{" "}
+        </AppBar>{" "}
+        <ViewTicket
+          currentTicket={currentTicket}
+          allticketstatus={allTicketStatus}
+        />{" "}
+      </Dialog>
+    </Box>
+  );
+}
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export default Ticket;

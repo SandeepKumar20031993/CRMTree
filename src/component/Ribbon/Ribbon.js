@@ -214,7 +214,7 @@ function Ribbon1() {
               </Typography>
               <Typography variant="h3" component="h3" align="center">
                 <Typography variant="inherit" component="strong">
-                  {perRibbonsPrice}
+                  &#x20b9; {perRibbonsPrice}
                   /-{" "}
                 </Typography>
               </Typography>

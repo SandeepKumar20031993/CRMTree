@@ -1,56 +1,78 @@
-// import {
-//   Dialog,
-//   DialogTitle,
-//   DialogContent,
-//   Grid,
-//   TextField,
-//   DialogActions,
-//   Button,
-// } from "@mui/material";
-// import { React, useState } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Grid,
+  TextField,
+  DialogActions,
+  Button,
+} from "@mui/material";
+import { React, useEffect, useState } from "react";
 
-// function SolutionDialog(props) {
-//   const [solution, setsolution] = useState();
+function SolutionDialog(props) {
+  const [solution, setSolution] = useState(props.solution);
+  const [latitude, setLatitude] = useState(props.latitude);
+  const [longitude, setLongitude] = useState(props.longitude);
 
-//   const handleSolution = (e) => {
-//     setsolution({
-//       solution: e.target.value,
-//     });
-//     console.log("sandeep", solution);
-//   };
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(
+            "latitude",
+            position.coords.latitude,
+            "longitude",
+            position.coords.longitude
+          );
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error_message) => {
+          console.error(
+            "An error has occured while retrieving location",
+            error_message
+          );
+        }
+      );
+    } else {
+      console.log("geolocation is not enabled on this browser");
+    }
+  });
 
-//   return (
-//     <Dialog open={props.open} aria-labelledby="form-dialog-title">
-//       <DialogTitle id="form-dialog-title">
-//         {" "}
-//         What solution have you given here ?{" "}
-//       </DialogTitle>{" "}
-//       <DialogContent>
-//         <Grid item xs>
-//           <TextField
-//             id="solution"
-//             label="Write Here..."
-//             multiline
-//             rowsMax="10"
-//             value={solution}
-//             onChange={handleSolution}
-//             className="width-100"
-//             margin="normal"
-//           />
-//         </Grid>{" "}
-//       </DialogContent>{" "}
-//       <DialogActions>
-//         <Button
-//           onClick={() =>
-//             this.props.submitSolution(solution, latitude, longitude)
-//           }
-//           color="primary"
-//         >
-//           Submit Solution{" "}
-//         </Button>{" "}
-//       </DialogActions>{" "}
-//     </Dialog>
-//   );
-// }
+  const handleSolution = (e) => {
+    setSolution(e.target.value);
+  };
 
-// export default SolutionDialog;
+  return (
+    <Dialog open={props.open} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">
+        {" "}
+        What solution have you given here ?{" "}
+      </DialogTitle>{" "}
+      <DialogContent>
+        <Grid item xs>
+          <TextField
+            id="solution"
+            label="Write Here..."
+            multiline
+            rowsMax="10"
+            value={solution}
+            onChange={handleSolution}
+            className="width-100"
+            margin="normal"
+          />
+        </Grid>{" "}
+      </DialogContent>{" "}
+      <DialogActions>
+        <Button
+          onClick={() => props.submitSolution(solution, latitude, longitude)}
+          color="primary"
+        >
+          Submit Solution{" "}
+        </Button>{" "}
+      </DialogActions>{" "}
+    </Dialog>
+  );
+}
+
+export default SolutionDialog;
