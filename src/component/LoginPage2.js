@@ -16,10 +16,13 @@ import Toolbar from "@mui/material/Toolbar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoadingBox from "./Theme/LoadingBox";
+import AlertBox from "./Theme/AlertBox";
 // import { Route } from "react-router-dom";
 // import { useState } from "react";
 // import { Navigate } from "react-router-dom";
 // import axios from "axios";
+import { useState } from "react";
 
 function Copyright() {
   return (
@@ -38,15 +41,38 @@ const theme = createTheme();
 
 export default function Submit() {
   const navigate = useNavigate();
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [openAlertMessage] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [rememberme, setRememberme] = useState(0);
+
+  const handleRememberme = (event) => {
+    if (rememberme === 0) {
+      setRememberme({
+        rememberme: 1,
+      });
+    } else {
+      setRememberme({
+        rememberme: 0,
+      });
+    }
+  };
+
+  const handleAlertClose = () => {
+    setOpenAlertDialog({
+      openAlertDialog: false,
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setOpenDialog(true);
 
     const logindata = new FormData(event.currentTarget);
-    console.log({
-      username: logindata.get("username"),
-      password: logindata.get("password"),
-    });
+    // console.log({
+    //   username: logindata.get("username"),
+    //   password: logindata.get("password"),
+    // });
 
     Axios({
       method: "post",
@@ -62,10 +88,9 @@ export default function Submit() {
       body: JSON.stringify(),
     })
       .then((result) => {
-        // console.warn("result", result);
+        console.warn("result", result);
         if (result.data.success === true) {
           let userdata = result.data.data;
-          // console.warn("localStorage.remember", localStorage.remember);
 
           localStorage.setItem("id", userdata[0].id);
           localStorage.setItem("user_name", userdata[0].user_name);
@@ -73,11 +98,9 @@ export default function Submit() {
           localStorage.setItem("last_name", userdata[0].last_name);
           localStorage.setItem("is_admin", userdata[0].is_admin);
           localStorage.setItem("status", userdata[0].status);
-          // }
 
           navigate("/home");
         }
-        //console.log(this.state);
       })
       .catch(function (error) {
         console.log(error);
@@ -126,8 +149,19 @@ export default function Submit() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            /> */}
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value={rememberme}
+                  color="primary"
+                  onChange={handleRememberme}
+                />
+              }
               label="Remember me"
             />
             <Button
@@ -142,6 +176,12 @@ export default function Submit() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
+      <LoadingBox open={openDialog} />{" "}
+      <AlertBox
+        open={openAlertDialog}
+        message={openAlertMessage}
+        close={handleAlertClose}
+      />
     </ThemeProvider>
   );
 }

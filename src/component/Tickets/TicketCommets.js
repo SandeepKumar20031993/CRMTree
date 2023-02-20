@@ -11,13 +11,13 @@ import CommentIcon from "@mui/icons-material/Comment";
 import Cookies from "universal-cookie";
 import axios from "axios";
 
-function TicketCommets(params) {
-  const [currentTicket, setCurrentTicket] = useState(
-    params?.currentTicketProps
-  );
-  const [allComments, setAllComments] = useState(params?.allComments);
-  const [writeComment, setWriteComment] = useState(params?.writeComment);
-  console.log(currentTicket);
+function TicketCommets(props) {
+  const [currentTicket] = useState(props.currentTicket);
+  const [allComments, setAllComments] = useState();
+  const [writeComment, setWriteComment] = useState("");
+
+  // url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=addcomment",
+
   useEffect(() => {
     axios({
       method: "post",
@@ -37,11 +37,13 @@ function TicketCommets(params) {
         alert("Something went wrong! Please refresh the page");
       });
   });
-  const handleComment = (e) => {
-    setWriteComment(e.target.value);
+  const handleComment = (event) => {
+    event.preventDefault();
+    setWriteComment(event.target.value);
   };
 
-  const postComment = () => {
+  const postComment = (event) => {
+    event.preventDefault();
     let cookies = new Cookies();
     let user_id = null;
 
@@ -55,6 +57,7 @@ function TicketCommets(params) {
       user_id = cookies.get("id");
       //user_name = cookies.get('user_name');
     }
+
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=addcomment",
@@ -68,7 +71,6 @@ function TicketCommets(params) {
     })
       .then((response) => {
         if (response.data.success === true) {
-          //console.log(response);
           setAllComments(response.data.data);
           setWriteComment("");
         } else {
@@ -133,44 +135,43 @@ function TicketCommets(params) {
                   spacing={2}
                 >
                   {" "}
-                  {allComments &&
-                    allComments.map((leadComment) => (
+                  {allComments.map((leadComment) => (
+                    <Grid
+                      item
+                      xs={12}
+                      className="comment-list-item"
+                      key={leadComment.modcommentsid}
+                      container
+                      direction="row"
+                      justify="flex-start"
+                      alignItems="center"
+                    >
                       <Grid
                         item
-                        xs={12}
-                        className="comment-list-item"
-                        key={leadComment.modcommentsid}
+                        xs={1}
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <CommentIcon />
+                      </Grid>{" "}
+                      <Grid
+                        item
+                        xs
                         container
                         direction="row"
                         justify="flex-start"
                         alignItems="center"
                       >
-                        <Grid
-                          item
-                          xs={1}
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
-                          <CommentIcon />
-                        </Grid>{" "}
-                        <Grid
-                          item
-                          xs
-                          container
-                          direction="row"
-                          justify="flex-start"
-                          alignItems="center"
-                        >
-                          &nbsp;{" "}
-                          <Typography variant="body1" component="span">
-                            {" "}
-                            {leadComment.commentcontent}{" "}
-                          </Typography>{" "}
-                        </Grid>{" "}
-                      </Grid>
-                    ))}{" "}
+                        &nbsp;{" "}
+                        <Typography variant="body1" component="span">
+                          {" "}
+                          {leadComment.commentcontent}{" "}
+                        </Typography>{" "}
+                      </Grid>{" "}
+                    </Grid>
+                  ))}{" "}
                 </Grid>
               ) : (
                 <Grid
@@ -186,7 +187,7 @@ function TicketCommets(params) {
                     didn 't find any Comments for this lead
                   </Typography>{" "}
                 </Grid>
-              )}{" "}
+              )}
             </CardContent>{" "}
           </Card>{" "}
         </Grid>{" "}

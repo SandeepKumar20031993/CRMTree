@@ -8,11 +8,7 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-// ReactDOM.render(<Typography></Typography>)
-// import RenderHTML from "react-native-render-html";
-// import renderHTML from "react-render-html";
-// import RenderHTML from "react-native-render-html";
-// import { ReactDOM } from "react";
+import ReactDOM from "react-dom/client";
 
 function TicketSolution(props) {
   return (
@@ -47,7 +43,7 @@ function TicketSolution(props) {
                 <Grid item xs={12}>
                   <Typography variant="body1" component="strong">
                     {" "}
-                    {RenderHTML(props.solution)}
+                    {/* {ReactDOM.render()(props.solution)} */}
                   </Typography>{" "}
                 </Grid>{" "}
               </Grid>{" "}

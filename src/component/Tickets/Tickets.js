@@ -26,7 +26,7 @@ import ViewTicket from "./ViewTicket";
 // import TicketCommets from "./TicketCommets";
 // import TicketSolution from "./TicketSolution";
 
-function Ticket(params) {
+function Ticket() {
   const [allticket, setAllticket] = useState([]);
   const [allTicketStatus, setAllticketStatus] = useState([]);
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ function Ticket(params) {
   // const [currentLeadStatus, setCurrentLeadStatus] = useState("");
   const [filter, setFilter] = useState("all");
   const [filterbyassignee, setFilterbyAssignee] = useState("all");
-  const [isDatewiseDialogOpen, setisDatewiseDialogOpen] = useState(false);
+  // const [isDatewiseDialogOpen, setisDatewiseDialogOpen] = useState(false);
   const [allAssignee, setAllAssignee] = useState([]);
 
   // const viticket = (params) => {
@@ -115,7 +115,8 @@ function Ticket(params) {
   }, []);
 
   const handleClose = () => {
-    setOpen(true);
+    console.log("sandeep");
+    setOpen(false);
   };
 
   //Filter Handler
@@ -182,40 +183,10 @@ function Ticket(params) {
     getFilterTickets(postUrl, postData);
   };
 
-  const vticket = (params) => {
-    setCurrentTicket(params);
+  const vticket = (ticket) => {
+    setCurrentTicket(ticket);
     setOpen(true);
   };
-
-  // Date wise filter funtionality
-
-  // const filterDateWiseLeads = (fromDateData, toDateData) => {
-  //   const cookies = new Cookies();
-  //   let user_id = null;
-
-  //   if (localStorage.getItem("id") != null) {
-  //     user_id = localStorage.getItem("id");
-  //   } else if (cookies.get("id")) {
-  //     user_id = cookies.get("id");
-  //   }
-  //   //console.log(fromDateData +"--" +toDateData);
-
-  //   let postUrl =
-  //     process.env.REACT_APP_API_URL + "leadsData.php?action=getdatewiseleads";
-  //   let postData = {
-  //     id: user_id,
-  //     date: {
-  //       startdate: fromDateData,
-  //       enddate: toDateData,
-  //     },
-  //   };
-
-  //   this.getFilterLeads(postUrl, postData);
-
-  //   setisDatewiseDialogOpen({
-  //     isDatewiseDialogOpen: false,
-  //   });
-  // };
 
   //For fetching data from API
   const getFilterTickets = (postUrl, postData) => {
@@ -258,15 +229,16 @@ function Ticket(params) {
                   }}
                 >
                   <MenuItem value="all"> Recent 100 </MenuItem>{" "}
-                  {allTicketStatus.map((ticketData) => (
-                    <MenuItem
-                      key={ticketData.ticketstatus_id}
-                      value={ticketData.ticketstatus}
-                    >
-                      {" "}
-                      {ticketData.ticketstatus}{" "}
-                    </MenuItem>
-                  ))}{" "}
+                  {allTicketStatus &&
+                    allTicketStatus.map((ticketData) => (
+                      <MenuItem
+                        key={ticketData.ticketstatus_id}
+                        value={ticketData.ticketstatus}
+                      >
+                        {" "}
+                        {ticketData.ticketstatus}{" "}
+                      </MenuItem>
+                    ))}{" "}
                 </Select>{" "}
               </FormControl>{" "}
             </CardContent>{" "}
@@ -455,7 +427,7 @@ function Ticket(params) {
             </IconButton>{" "}
             <Typography variant="h6" className="">
               {" "}
-              {currentTicket.ticket_no}{" "}
+              {currentTicket?.ticket_no}{" "}
             </Typography>{" "}
           </Toolbar>{" "}
         </AppBar>{" "}

@@ -10,9 +10,10 @@ import {
 import { React, useEffect, useState } from "react";
 
 function SolutionDialog(props) {
-  const [solution, setSolution] = useState(props.solution);
-  const [latitude, setLatitude] = useState(props.latitude);
-  const [longitude, setLongitude] = useState(props.longitude);
+  const [solution, setSolution] = useState();
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  // const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if ("geolocation" in navigator) {

@@ -1,31 +1,71 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react/jsx-no-undef */
+import { React, useState } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@material-ui/core/Divider";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+// import Redirect from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Product() {
+import { useEffect } from "react";
+
+function Product(props) {
   const [product, setProduct] = useState([]);
   const [ProductPrice, setProductPrice] = useState(0);
+  const navigate = useNavigate();
+  // const { state } = useLocation();
 
-  const proprice = (e) => {
-    e.preventDefault();
-    console.log("prooo");
-    if (this.props.location.product) {
-      const { product } = this.props.location;
+  // console.log("state,", state);
+
+  useEffect(() => {
+    if (props.location.product) {
+      const { product } = navigate;
+
+      setProductPrice(Math.round(product.unit_price));
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (props.location.product) {
+  //     const { product } = props.location;
+  //     setProductPrice({
+  //       ProductPrice: Math.round(product.unit_price),
+  //     });
+  //   }
+  // }, []);
+  console.log("aaya kya ", navigate);
+  const getProductPrice = (productData, priceType) => {
+    if (priceType === "UP") {
       setProductPrice({
-        ProductPrice: Math.round(product.unit_price),
+        ProductPrice: Math.round(productData.unit_price),
+      });
+    } else if (priceType === "BMP") {
+      setProductPrice({
+        ProductPrice: Math.round(productData.cf_851),
+      });
+    } else if (priceType === "NRP") {
+      setProductPrice({
+        ProductPrice: Math.round(productData.cf_853),
       });
     }
   };
 
-  useEffect(() => {
-    proprice();
-  });
+  // const navigate = useNavigate();
+  // navigate("/");
 
-  const getProductPrice = (e) => {};
+  // if (!location.product){
+
+  // // }
+  // if (!props.location.product) {
+  //   return <Redirect to="/" />;
+  // }
+
+  if (!this.props.location.product) {
+    return navigate("/");
+  }
   return (
     <div className="grid-container">
       <Card className="">
@@ -141,7 +181,7 @@ function Product() {
               </Typography>{" "}
               <Typography variant="h3" component="h3" align="center">
                 <Typography variant="inherit" component="strong">
-                  &#x20b9; {this.state.ProductPrice}
+                  &#x20b9; {ProductPrice}
                   /-{" "}
                 </Typography>{" "}
               </Typography>{" "}

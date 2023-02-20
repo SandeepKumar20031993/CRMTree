@@ -14,26 +14,30 @@ import SolutionDialog from "./SolutionDialog";
 import TicketSolution from "./TicketSolution";
 import axios from "axios";
 
-function ViewTicket(props) {
-  const [currentRefTicket, setCurrentRefTicket] = useState(props.currentTicket);
+function ViewTicket(params) {
+  const [currentRefTicket, setCurrentRefTicket] = useState(
+    params.currentTicket
+  );
   const [allRefTicketStatus, setallRefTicketStatus] = useState(
-    props.allTicketStatus
+    params.allticketstatus
   );
   const [openSolutionDialog, setopenSolutionDialog] = useState(false);
-
-  const handleStatusChange = (e) => {
-    if (e.target.value !== "Closed") {
-      alert("Problem");
+  console.log("dataaa", allRefTicketStatus);
+  const handleStatusChange = (event) => {
+    //console.log(event.target.value);
+    //console.log(this.state.currentRefTicket);
+    if (event.target.value !== "Closed") {
       axios({
         method: "post",
         url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=updateticketstatus",
         data: {
           ticketData: currentRefTicket,
-          ticketStatus: e.target.value,
+          ticketStatus: event.target.value,
         },
       })
         .then((response) => {
           if (response.data.success === true) {
+            //console.log(response.data.data);
             setCurrentRefTicket(response.data.data);
           } else {
             alert("Error");
@@ -43,17 +47,19 @@ function ViewTicket(props) {
           console.log(error);
         });
     } else {
-      setopenSolutionDialog(true);
+      setopenSolutionDialog({
+        openSolutionDialog: true,
+      });
     }
   };
 
   const submitSolution = (resSolution, lat, long) => {
     let solution = resSolution.replace(/^\s+|\s+$/g, "");
 
-    let mapUrl = "https://maps.google.com/maps?q=" + lat + "," + long;
+    // let mapUrl = "https://maps.google.com/maps?q=" + lat + "," + long;
 
-    let mapAnchorTag =
-      '<a href="' + mapUrl + '" target="blank" class="">' + mapUrl + "</a>";
+    // let mapAnchorTag =
+    //   '<a href="' + mapUrl + '" target="blank" class="">' + mapUrl + "</a>";
 
     //console.log(resSolution+"----------"+lat+"-----------"+long);
 
@@ -77,12 +83,12 @@ function ViewTicket(props) {
         .then((response) => {
           if (response.data.success === true) {
             console.log(response.data.data);
-            // setCurrentRefTicket({
-            //   currentRefTicket: response.data.data,
-            //   openSolutionDialog: false,
-            // });
-            setCurrentRefTicket(response.data.data);
-            setopenSolutionDialog(false);
+            setCurrentRefTicket({
+              currentRefTicket: response.data.data,
+              openSolutionDialog: false,
+            });
+            // setCurrentRefTicket(response.data.data);
+            // setopenSolutionDialog(false);
           } else {
             console.log(
               "Something went wrong! Please refresh the page and Try again"
@@ -115,7 +121,7 @@ function ViewTicket(props) {
                   <Grid item xs={8}>
                     <Typography gutterBottom variant="h6" component="strong">
                       {" "}
-                      {currentRefTicket.ticket_no}{" "}
+                      {currentRefTicket?.ticket_no}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>{" "}
@@ -132,7 +138,7 @@ function ViewTicket(props) {
                   <Grid item xs={8}>
                     <FormControl className="width-100">
                       <Select
-                        value={currentRefTicket.status}
+                        value={currentRefTicket?.status}
                         onChange={handleStatusChange}
                         name="lead-status"
                         className="width-100"
@@ -181,7 +187,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.accountname}{" "}
+                      {currentRefTicket?.accountname}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -203,7 +209,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.firstname} {currentRefTicket.lastname}{" "}
+                      {currentRefTicket?.firstname} {currentRefTicket?.lastname}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -219,7 +225,7 @@ function ViewTicket(props) {
                   </Grid>{" "}
                   <Grid item xs={6}>
                     {" "}
-                    {currentRefTicket.mobile ? (
+                    {currentRefTicket?.mobile ? (
                       <Typography
                         gutterBottom
                         variant="body1"
@@ -240,17 +246,17 @@ function ViewTicket(props) {
                         color="textPrimary"
                       >
                         {" "}
-                        <a href={"tel:" + currentRefTicket.phone}>
+                        <a href={"tel:" + currentRefTicket?.phone}>
                           {" "}
-                          {currentRefTicket.phone}{" "}
+                          {currentRefTicket?.phone}{" "}
                         </a>
                       </Typography>
                     )}{" "}
                   </Grid>{" "}
-                  {currentRefTicket.mobile || currentRefTicket.phone ? (
+                  {currentRefTicket?.mobile || currentRefTicket?.phone ? (
                     <Grid item xs={2}>
                       {" "}
-                      {currentRefTicket.mobile ? (
+                      {currentRefTicket?.mobile ? (
                         <Typography
                           gutterBottom
                           variant="body1"
@@ -258,7 +264,7 @@ function ViewTicket(props) {
                           color="textPrimary"
                         >
                           {" "}
-                          <a href={"tel:" + currentRefTicket.mobile}>
+                          <a href={"tel:" + currentRefTicket?.mobile}>
                             {" "}
                             <CallIcon />{" "}
                           </a>
@@ -271,7 +277,7 @@ function ViewTicket(props) {
                           color="textPrimary"
                         >
                           {" "}
-                          <a href={"tel:" + currentRefTicket.phone}>
+                          <a href={"tel:" + currentRefTicket?.phone}>
                             {" "}
                             <CallIcon />{" "}
                           </a>
@@ -302,7 +308,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.dt}{" "}
+                      {currentRefTicket?.dt}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -324,7 +330,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.description}{" "}
+                      {currentRefTicket?.description}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -346,7 +352,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.priority}{" "}
+                      {currentRefTicket?.priority}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>{" "}
@@ -368,7 +374,7 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.severity}{" "}
+                      {currentRefTicket?.severity}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -390,7 +396,8 @@ function ViewTicket(props) {
                       color="textPrimary"
                     >
                       {" "}
-                      {currentRefTicket.first_name} {currentRefTicket.last_name}{" "}
+                      {currentRefTicket?.first_name}{" "}
+                      {currentRefTicket?.last_name}{" "}
                     </Typography>{" "}
                   </Grid>{" "}
                 </Grid>
@@ -399,8 +406,10 @@ function ViewTicket(props) {
           </Grid>{" "}
         </Grid>{" "}
       </Box>{" "}
-      {currentRefTicket.solution ? (
-        <TicketSolution solution={currentRefTicket.solution} />
+      {currentRefTicket?.solution ? (
+        {
+          /* <TicketSolution solution={currentRefTicket?.solution} /> */
+        }
       ) : (
         <Box></Box>
       )}{" "}

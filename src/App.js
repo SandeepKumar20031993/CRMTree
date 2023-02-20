@@ -19,13 +19,20 @@ import Tickets from "./component/Tickets/Tickets";
 // import Leads5 from "./component/leades/Leads5";
 import Leads3 from "./component/leades/Leads3";
 import Viewlead1 from "./component/leades/Viewlead1";
+// import LoginPage2 from "./component/LoginPage2";
+import helpers from "./component/helper/helper";
+import LoginPage1 from "./component/LoginPage1";
 
 function App() {
+  if (!helpers.isLogin()) {
+    return <LoginPage1 />;
+  }
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route exact path="/" element={<LoginPage />} />
+        {/* <Route exact path="/" element={<LoginPage />} /> */}
+        <Route exact path="/" element={<LoginPage1 />} />
         <Route path="/home" element={<Home />} />
         <Route path="/viewlead1" element={<Viewlead1 />} />
         {/* <Route path="/src/component/Ribbon/Ribbon" element={<Ribbon />} /> */}

@@ -16,7 +16,7 @@ import axios from "axios";
 function LeadComments(params) {
   const [writeComment, setWriteComment] = useState(params?.writeComment);
   const [allComments, setAllcomments] = useState(params?.allComments);
-  const [currentLead, setCurrentLead] = useState(params?.currentLead);
+  const [currentLead] = useState();
 
   useEffect(() => {
     axios({
@@ -44,7 +44,6 @@ function LeadComments(params) {
   };
 
   const postComment = (e) => {
-    e.preventDefault();
     let cookies = new Cookies();
     let user_id = null;
     let user_name = null;
@@ -61,7 +60,7 @@ function LeadComments(params) {
     }
 
     console.log("button clicked");
-    console.log(writeComment);
+    console.log(this.state.writeComment);
     console.log(user_id);
     console.log(user_name);
 
