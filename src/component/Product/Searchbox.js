@@ -13,14 +13,14 @@ import Avatar from "@mui/material/Avatar";
 // import { Redirect } from "react-router-dom";
 import product from "../../css/product.css";
 import { Route, Routes, useRevalidator } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
 import { useState } from "react";
 import axios from "axios";
 
 function Searchbox(props) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const {isRedirect} = useRevalidator();
   const [userInput, setUserInput] = useState("");
   const [filteredSuggestions, setfilteredSuggestions] = useState([]);
@@ -133,25 +133,9 @@ function Searchbox(props) {
         />{" "}
       </div>{" "}
       {suggestionsListComponent}
-      {isSearching ? (
-        <>
-          {" "}
-          {isRedirect ? (
-            <Routes>
-              <Route
-                to={{
-                  pathname: `/Product`,
-                  product: selectedProduct,
-                }}
-              />
-            </Routes>
-          ) : (
-            <Routes>
-              <Route to={`/home`} />
-            </Routes>
-          )}{" "}
-        </>
-      ) : null}
+      {/* {isSearching ? (
+        <> {isRedirect ? navigate(`/Product`) : navigate(`/home`)} </>
+      ) : null} */}
     </React.Fragment>
   );
 }

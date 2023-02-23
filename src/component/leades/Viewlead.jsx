@@ -18,11 +18,11 @@ import LeadComments from "./LeadComments";
 function Viewlead(params) {
   const [currentLead, setCurrentLead] = useState(params?.currentLead);
   const [allLeadStatus] = useState(params?.allLeadStatus);
-  //   console.log("hkjdjkdhkjshdjkhsjkdhkjshdkjhsk", currentLead);
-  const handleStatusChange = (event) => {
-    event.preventDafault();
-    console.log("first", params);
 
+  const handleStatusChange = (event) => {
+    console.log(event.target.value);
+    console.log("curr", currentLead);
+    setCurrentLead("event.target.value");
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=updateleadstatus",
@@ -33,7 +33,6 @@ function Viewlead(params) {
     })
       .then((response) => {
         if (response.data.success === true) {
-          console.log(response.data.data);
           setCurrentLead(response.data.data);
         } else {
           alert("Error");
@@ -87,7 +86,7 @@ function Viewlead(params) {
                         name="lead-status"
                         className="width-100"
                       >
-                        {allLeadStatus?.map((leadstatus) =>
+                        {allLeadStatus.map((leadstatus) =>
                           leadstatus.leadstatus !== currentLead.leadstatus ? (
                             <MenuItem
                               key={leadstatus.leadstatusid}
