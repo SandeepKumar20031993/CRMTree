@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   CssBaseline,
   AppBar,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-// import CloseIcon from "@mui/icons-material/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import { ListItemIcon } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BuildIcon from "@mui/icons-material/Build";
@@ -24,11 +24,15 @@ import IconButton from "@mui/material/IconButton";
 import helper from "../helper/helper";
 import Searchbox from "../Product/Searchbox";
 import Box from "@mui/material/Box";
+
+import { useNavigate } from "react-router-dom";
 // import { makeStyles useTheme } from "@material-ui/core/styles";
 
 function Header() {
   // const useStyles = makeStyles((theme) => ({}));
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  const navigate = new useNavigate();
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -40,13 +44,13 @@ function Header() {
 
   function clearUserData() {
     helper.logOut();
+    navigate("/");
   }
 
   function isleadsAllowed() {
     if (helper.isleadsAllow() === true) {
       return true;
     }
-    return false;
   }
   return (
     <Box marginBottom={8}>
@@ -62,11 +66,7 @@ function Header() {
             <MenuIcon />
           </IconButton>
           <Searchbox />
-          <Link
-            to={`${process.env.PUBLIC_URL}/`}
-            className="header-home-icon"
-            align="right"
-          >
+          <Link to={`/home`} className="header-home-icon" align="right">
             <HomeIcon />
           </Link>{" "}
         </Toolbar>{" "}
@@ -75,13 +75,13 @@ function Header() {
         <div>
           <div>
             <Link
-              to={`${process.env.PUBLIC_URL}/`}
+              to={`/`}
               className="avatar-drawer-menu-link"
               onClick={handleDrawerClose}
             >
               <Avatar
                 alt="Treewalker"
-                src={`${process.env.PUBLIC_URL}/assets/favicon.png`}
+                src={`/assets/favicon.png`}
                 className="logo"
               />
             </Link>{" "}
@@ -106,7 +106,7 @@ function Header() {
           {" "}
           {isleadsAllowed() ? (
             <Link
-              to={`${process.env.PUBLIC_URL}/leads`}
+              to={`/leads`}
               className="drawer-menu-link"
               onClick={handleDrawerClose}
             >
@@ -120,7 +120,7 @@ function Header() {
             </Link>
           ) : null}{" "}
           <Link
-            to={`${process.env.PUBLIC_URL}/tickets`}
+            to={`/tickets`}
             className="drawer-menu-link"
             onClick={handleDrawerClose}
           >
@@ -133,7 +133,7 @@ function Header() {
             </ListItem>{" "}
           </Link>{" "}
           <Link
-            to={`${process.env.PUBLIC_URL}/warranty`}
+            to={`/warranty`}
             className="drawer-menu-link"
             onClick={handleDrawerClose}
           >
@@ -146,7 +146,7 @@ function Header() {
             </ListItem>{" "}
           </Link>{" "}
           <Link
-            to={`${process.env.PUBLIC_URL}/labels`}
+            to={`/labels`}
             className="drawer-menu-link"
             onClick={handleDrawerClose}
           >
@@ -159,7 +159,7 @@ function Header() {
             </ListItem>{" "}
           </Link>{" "}
           <Link
-            to={`${process.env.PUBLIC_URL}/ribbons`}
+            to={`/ribbons`}
             className="drawer-menu-link"
             onClick={handleDrawerClose}
           >

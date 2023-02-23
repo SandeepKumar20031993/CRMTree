@@ -12,14 +12,16 @@ import Avatar from "@mui/material/Avatar";
 
 // import { Redirect } from "react-router-dom";
 import product from "../../css/product.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useRevalidator } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { useState } from "react";
 import axios from "axios";
 
 function Searchbox(props) {
   // const navigate = useNavigate();
+  // const {isRedirect} = useRevalidator();
   const [userInput, setUserInput] = useState("");
   const [filteredSuggestions, setfilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -73,7 +75,7 @@ function Searchbox(props) {
 
   const productHandler = (product) => {
     // navigate("./Product");
-    //console.log(product.productname);
+    console.log("kya gogya ", product.productname);
     setUserInput(product.productname);
     setselectedProduct(product);
     setisSearching(true);
@@ -83,7 +85,7 @@ function Searchbox(props) {
 
     // navigate("/Product", product);
   };
-
+  console.log("first", isSearching);
   let suggestionsListComponent;
   if (filteredSuggestions.length !== 0 && showSuggestions) {
     suggestionsListComponent = (
@@ -138,14 +140,14 @@ function Searchbox(props) {
             <Routes>
               <Route
                 to={{
-                  pathname: `/Product.js`,
+                  pathname: `/Product`,
                   product: selectedProduct,
                 }}
               />
             </Routes>
           ) : (
             <Routes>
-              <Route to={`/`} />
+              <Route to={`/home`} />
             </Routes>
           )}{" "}
         </>

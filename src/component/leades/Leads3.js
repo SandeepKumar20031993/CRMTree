@@ -47,7 +47,7 @@ function Leads() {
     } else if (cookies.get("id")) {
       user_id = cookies.get("id");
     }
-
+    console.log("user_id", user_id);
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getallleads",
@@ -72,7 +72,7 @@ function Leads() {
     })
       .then((response) => {
         if (response.data.success === true) {
-          //console.log(response);
+          console.log(response);
           setAllLeadStatus(response.data.data);
         } else {
           alert("Something went wrong! Please refresh the page");
@@ -86,17 +86,19 @@ function Leads() {
 
   useEffect(() => {
     leads();
+    console.log("first");
   }, []);
 
   const handleClose = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setOpen(false);
   };
 
-  const welead = (lead) => {
+  const welead = (params) => {
     // alert("Tera kya hoga kaliya ");
 
-    setCurrentLead(lead);
+    setCurrentLead(params);
+
     setOpen(true);
   };
 
@@ -169,13 +171,9 @@ function Leads() {
     })
       .then((response) => {
         if (response.data.success === true) {
-          setAlllead({
-            AllLeads: response.data.data,
-          });
+          setAlllead(response.data.data);
         } else {
-          setAlllead({
-            AllLeads: [],
-          });
+          setAlllead([]);
         }
       })
       .catch(function (error) {
@@ -231,7 +229,7 @@ function Leads() {
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="strong">
-                    Lead# {lead?.lead_no}{" "}
+                    Lead# {lead.lead_no}{" "}
                   </Typography>{" "}
                   <Typography
                     gutterBottom

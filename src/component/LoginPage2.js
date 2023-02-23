@@ -1,106 +1,124 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-// import Link from "@mui/material/Link";
-// import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 import LoadingBox from "./Theme/LoadingBox";
 import AlertBox from "./Theme/AlertBox";
-// import { Route } from "react-router-dom";
-// import { useState } from "react";
-// import { Navigate } from "react-router-dom";
-// import axios from "axios";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <AppBar>
-      <Toolbar className="justify-content-center">
-        <Typography variant="h6" className="center">
-          {" "}
-          Welcome On CRM{" "}
-        </Typography>{" "}
-      </Toolbar>{" "}
-    </AppBar>
-  );
-}
-
-const theme = createTheme();
-
-export default function Submit() {
+function LoginPage() {
   const navigate = useNavigate();
-  const [openAlertDialog, setOpenAlertDialog] = useState(false);
-  const [openAlertMessage] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberme, setRememberme] = useState(0);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [openAlertMessage, setOpenAlertMessage] = useState("");
+  const [redirect, setRedirect] = useState(false);
+
+  const handleUsername = (event) => {
+    event.preventDefault();
+    setUsername(event.target.value);
+  };
+
+  const handlePassword = (event) => {
+    event.preventDefault();
+    setPassword(event.target.value);
+  };
 
   const handleRememberme = (event) => {
+    event.preventDefault();
     if (rememberme === 0) {
-      setRememberme({
-        rememberme: 1,
-      });
+      setRememberme(1);
     } else {
-      setRememberme({
-        rememberme: 0,
-      });
+      setRememberme(0);
     }
   };
 
-  const handleAlertClose = () => {
-    setOpenAlertDialog({
-      openAlertDialog: false,
-    });
+  const handleAlertClose = (event) => {
+    // event.preventDefault();
+    setOpenAlertDialog(false);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setOpenDialog(true);
-
-    const logindata = new FormData(event.currentTarget);
-    // console.log({
-    //   username: logindata.get("username"),
-    //   password: logindata.get("password"),
-    // });
-
+    // const { username, password } = this.state;
+    const cookies = new Cookies();
     Axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/auth.php?action=login",
       data: {
-        username: logindata.get("username"),
-        password: logindata.get("password"),
+        username: `${username}`,
+        password: `${password}`,
       },
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(),
     })
-      .then((result) => {
-        console.warn("result", result);
-        if (result.data.success === true) {
-          let userdata = result.data.data;
+      .then((response) => {
+        //console.log(this.state);
+        //console.log(response.data);
+        if (response.data.success === true) {
+          let userdata = response.data.data;
 
-          localStorage.setItem("id", userdata[0].id);
-          localStorage.setItem("user_name", userdata[0].user_name);
-          localStorage.setItem("first_name", userdata[0].first_name);
-          localStorage.setItem("last_name", userdata[0].last_name);
-          localStorage.setItem("is_admin", userdata[0].is_admin);
-          localStorage.setItem("status", userdata[0].status);
+          if (rememberme === 1) {
+            localStorage.setItem("id", userdata[0].id);
+            localStorage.setItem("user_name", userdata[0].user_name);
+            localStorage.setItem("first_name", userdata[0].first_name);
+            localStorage.setItem("last_name", userdata[0].last_name);
+            localStorage.setItem("is_admin", userdata[0].is_admin);
+            localStorage.setItem("status", userdata[0].status);
+          } else {
+            cookies.set("id", userdata[0].id, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+            cookies.set("user_name", userdata[0].user_name, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+            cookies.set("first_name", userdata[0].first_name, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+            cookies.set("last_name", userdata[0].last_name, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+            cookies.set("is_admin", userdata[0].is_admin, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+            cookies.set("status", userdata[0].status, {
+              path: `$/`,
+              maxAge: 3600,
+            });
+          }
+          setOpenDialog(false);
+          setRedirect(true);
 
           navigate("/home");
+        } else {
+          setOpenDialog(false);
+
+          setOpenAlertDialog(true);
+          setOpenAlertMessage(response.data.msg);
         }
+        //console.log(this.state);
       })
       .catch(function (error) {
         console.log(error);
@@ -108,80 +126,86 @@ export default function Submit() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Enter Your Name"
-              name="username"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value={rememberme}
-                  color="primary"
-                  onChange={handleRememberme}
+    <React.Fragment>
+      <CssBaseline />
+      <AppBar>
+        <Toolbar className="justify-content-center">
+          <Typography variant="h6" className="center">
+            {" "}
+            Welcome On CRM{" "}
+          </Typography>{" "}
+        </Toolbar>{" "}
+      </AppBar>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        className="App no-padding"
+      >
+        <Container maxWidth="sm">
+          <Card className="card">
+            <CardContent>
+              <Typography variant="h6" center="true">
+                {" "}
+                Login{" "}
+              </Typography>{" "}
+              <form
+                className="container"
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit}
+              >
+                <TextField
+                  id="username"
+                  label="Username"
+                  className="textField"
+                  margin="normal"
+                  value={username}
+                  onChange={handleUsername}
+                  //ref={this.inputRef}
                 />
-              }
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Submit
-            </Button>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-      <LoadingBox open={openDialog} />{" "}
-      <AlertBox
-        open={openAlertDialog}
-        message={openAlertMessage}
-        close={handleAlertClose}
-      />
-    </ThemeProvider>
+                <TextField
+                  type="password"
+                  id="password"
+                  label="Password"
+                  className="textField"
+                  margin="normal"
+                  value={password}
+                  onChange={handlePassword}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={rememberme}
+                      onChange={handleRememberme}
+                      value={rememberme}
+                      color="primary"
+                    />
+                  }
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className="button btn-block"
+                >
+                  Login{" "}
+                </Button>{" "}
+              </form>{" "}
+            </CardContent>{" "}
+          </Card>{" "}
+        </Container>
+        <LoadingBox open={openDialog} />{" "}
+        <AlertBox
+          open={openAlertDialog}
+          message={openAlertMessage}
+          close={handleAlertClose}
+        />
+      </Grid>{" "}
+    </React.Fragment>
   );
 }
+
+export default LoginPage;

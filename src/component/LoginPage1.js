@@ -76,22 +76,22 @@ function LoginPage1({ navigation }) {
           let userdata = response.data.data;
 
           if (rememberme === true) {
-            localStorage.setItem("id", userdata[false].id);
-            localStorage.setItem("user_name", userdata[false].user_name);
-            localStorage.setItem("first_name", userdata[false].first_name);
-            localStorage.setItem("last_name", userdata[false].last_name);
-            localStorage.setItem("is_admin", userdata[false].is_admin);
-            localStorage.setItem("status", userdata[false].status);
+            localStorage.setItem("id", userdata[0].id);
+            localStorage.setItem("user_name", userdata[0].user_name);
+            localStorage.setItem("first_name", userdata[0].first_name);
+            localStorage.setItem("last_name", userdata[0].last_name);
+            localStorage.setItem("is_admin", userdata[0].is_admin);
+            localStorage.setItem("status", userdata[0].status);
           } else {
-            Cookies.set("id", userdata[false].id, {
+            Cookies.set("id", userdata[0].id, {
               path: "/home",
               maxAge: 3600,
             });
-            Cookies.set("user_name", userdata[false].user_name, {
+            Cookies.set("user_name", userdata[0].user_name, {
               path: "/home",
               maxAge: 3600,
             });
-            Cookies.set("first_name", userdata[false].first_name, {
+            Cookies.set("first_name", userdata[0].first_name, {
               path: "/home",
               maxAge: 3600,
             });

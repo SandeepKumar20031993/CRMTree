@@ -63,7 +63,7 @@ function Product(props) {
   //   return <Redirect to="/" />;
   // }
 
-  if (!this.props.location.product) {
+  if (!props.location.product) {
     return navigate("/");
   }
   return (

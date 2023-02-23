@@ -14,11 +14,11 @@ import axios from "axios";
 // import Cookies from "universal-cookie";
 
 function LeadComments(params) {
-  const [writeComment, setWriteComment] = useState(params?.writeComment);
-  const [allComments, setAllcomments] = useState(params?.allComments);
-  const [currentLead] = useState();
+  const [writeComment, setWriteComment] = useState("");
+  const [allComments, setAllcomments] = useState();
+  const [currentLead, setCurrentLead] = useState(params?.currentLead);
 
-  useEffect(() => {
+  const getfilterlead = () => {
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/leadsData.php?action=getcomments",
@@ -36,7 +36,11 @@ function LeadComments(params) {
       .catch(function (error) {
         alert("Something went wrong! Please refresh the page");
       });
-  });
+  };
+
+  useEffect(() => {
+    getfilterlead();
+  }, []);
 
   const handleComment = (e) => {
     e.preventDefault();
@@ -44,6 +48,7 @@ function LeadComments(params) {
   };
 
   const postComment = (e) => {
+    e.preventDefault();
     let cookies = new Cookies();
     let user_id = null;
     let user_name = null;
@@ -60,7 +65,7 @@ function LeadComments(params) {
     }
 
     console.log("button clicked");
-    console.log(this.state.writeComment);
+    console.log(writeComment);
     console.log(user_id);
     console.log(user_name);
 
@@ -77,13 +82,12 @@ function LeadComments(params) {
     })
       .then((response) => {
         if (response.data.success === true) {
+          console.log(response);
           setAllcomments(response.data.data);
           setWriteComment("");
         } else {
           console.log(response.data.msg);
-          setAllcomments({
-            allComments: "",
-          });
+          setAllcomments("");
         }
       })
       .catch(function (error) {

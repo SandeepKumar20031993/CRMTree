@@ -13,12 +13,12 @@ import axios from "axios";
 
 function TicketCommets(props) {
   const [currentTicket] = useState(props.currentTicket);
-  const [allComments, setAllComments] = useState();
+  const [allComments, setAllComments] = useState("");
   const [writeComment, setWriteComment] = useState("");
 
   // url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=addcomment",
 
-  useEffect(() => {
+  const ticketfilter = (e) => {
     axios({
       method: "post",
       url: "http://barcodesystem.in/upgradecrm/restapi/tickets.php?action=getcomments",
@@ -36,7 +36,11 @@ function TicketCommets(props) {
       .catch(function (error) {
         alert("Something went wrong! Please refresh the page");
       });
-  });
+  };
+
+  useEffect(() => {
+    ticketfilter();
+  }, []);
   const handleComment = (event) => {
     event.preventDefault();
     setWriteComment(event.target.value);

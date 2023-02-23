@@ -1,5 +1,5 @@
 import Cookies from "universal-cookie";
-import Axios from "axios";
+import axios from "axios";
 
 const helpers = {
   isLogin: function () {
@@ -37,7 +37,7 @@ const helpers = {
       this.clearCoockies(item);
     }
     localStorage.clear();
-    window.location.reload();
+    // navigate("/");
   },
   clearCoockies: function (name) {
     // This function will attempt to remove a cookie from all paths.
@@ -64,15 +64,15 @@ const helpers = {
 
     let isSuccess = false;
 
-    Axios.post(
-      "http://barcodesystem.in/upgradecrm/restapi/auth.php?action=getPermisions",
-      {
-        user_id: user_id,
-      }
-    )
+    axios
+      .post(
+        "http://barcodesystem.in/upgradecrm/restapi/auth.php?action=getPermisions",
+        {
+          user_id: user_id,
+        }
+      )
       .then((response) => {
         if (response.data.success === true) {
-          // console.log("sandeep", response);
           cookies.set("now_is_admin", response.data.data.is_admin, {
             path: `/`,
             maxAge: 3600,
@@ -110,6 +110,7 @@ const helpers = {
     } else if (cookies.get("Leads") === "yes") {
       isleadsAllowed = true;
     } else if (!cookies.get("now_is_admin") && !cookies.get("now_is_active")) {
+      // console.log("first ddsdsddddddd");
       this.setPermission();
       if (cookies.get("Leads")) {
         isleadsAllowed = true;
